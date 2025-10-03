@@ -16,13 +16,22 @@ while (currentFolders.Count > 0)
     {
         display.Show(currentFolder);
 
-        var files = Directory
-            .GetFiles(currentFolder)
+        string[] allFiles;
+        try
+        {
+            allFiles = Directory.GetFiles(currentFolder);
+        }
+        catch
+        {
+            allFiles = [];
+        }
+
+        var validFiles = allFiles
             .Where(file => !skip.Skipped(file))
             .OrderByDescending(t => t)
             .ToArray();
 
-        foreach (var file in files)
+        foreach (var file in validFiles)
         {
             display.Show(file);
 
@@ -34,14 +43,23 @@ while (currentFolders.Count > 0)
             }
         }
 
-        searchedFiles += files.Length;
+        searchedFiles += validFiles.Length;
 
-        var folders = Directory
-            .GetDirectories(currentFolder)
+        string[] allFolders;
+        try
+        {
+            allFolders = Directory.GetDirectories(currentFolder);
+        }
+        catch
+        {
+            allFolders = [];
+        }
+
+        var validFolders = allFolders
             .Where(folder => !skip.Skipped(folder))
             .OrderByDescending(t => t);
 
-        nextFolders.AddRange(folders);
+        nextFolders.AddRange(validFolders);
     }
 
     searchedFolders += currentFolders.Count;
