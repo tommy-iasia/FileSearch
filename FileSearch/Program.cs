@@ -24,6 +24,7 @@ while (currentFolders.Count > 0)
         catch
         {
             allFiles = [];
+            await logger.LogAsync($"Failed to get files from {currentFolder}");
         }
 
         var validFiles = allFiles
@@ -35,11 +36,21 @@ while (currentFolders.Count > 0)
         {
             display.Show(file);
 
-            var fileText = await File.ReadAllTextAsync(file);
+            string fileText;
+            try
+            {
+                fileText = await File.ReadAllTextAsync(file);
+            }
+            catch
+            {
+                await logger.LogAsync($"Failed to read {file}");
+                continue;
+            }
+
             if (capture.Capture(fileText))
             {
                 display.Output(file);
-                await logger.LogAsync(file);
+                await logger.LogAsync($"Captured {file}");
             }
         }
 
@@ -53,6 +64,7 @@ while (currentFolders.Count > 0)
         catch
         {
             allFolders = [];
+            await logger.LogAsync($"Failed to get folders from {currentFolder}");
         }
 
         var validFolders = allFolders
