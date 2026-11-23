@@ -43,20 +43,22 @@ namespace FileSearch
             var directory = Path.GetDirectoryName(file);
             if (!string.IsNullOrEmpty(directory))
             {
-                Console.Write($"\u001B]8;;{directory}\a{directory}\u001B]8;;\a");
+                Console.Write($"\u001B]8;;{FileUri(directory)}\a{directory}\u001B]8;;\a");
                 Console.Write(Path.DirectorySeparatorChar);
 
                 var name = Path.GetFileName(file);
-                Console.WriteLine($"\u001B]8;;{file}\a{name}\u001B]8;;\a");
+                Console.WriteLine($"\u001B]8;;{FileUri(file)}\a{name}\u001B]8;;\a");
             }
             else
             {
-                Console.WriteLine($"\u001B]8;;{file}\a{file}\u001B]8;;\a");
+                Console.WriteLine($"\u001B]8;;{FileUri(file)}\a{file}\u001B]8;;\a");
             }
 
             Console.ForegroundColor = color;
 
             Console.Write(showing);
         }
+
+        private static string FileUri(string path) => new Uri(Path.GetFullPath(path)).AbsoluteUri;
     }
 }

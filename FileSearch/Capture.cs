@@ -4,7 +4,7 @@ namespace FileSearch
 {
     public interface ICapture
     {
-        bool Capture(string path);
+        bool Capture(string text);
 
         public static async Task<ICapture> LoadAsync(Logger logger)
         {
@@ -31,13 +31,13 @@ namespace FileSearch
         }
     }
 
-    public class TextCapture(string text) : ICapture
+    public class TextCapture(string inputText) : ICapture
     {
-        public bool Capture(string path) => path.Contains(text, StringComparison.OrdinalIgnoreCase);
+        public bool Capture(string fileText) => fileText.Contains(inputText, StringComparison.OrdinalIgnoreCase);
     }
 
     public class RegexCapture(Regex regex) : ICapture
     {
-        public bool Capture(string path) => regex.IsMatch(path);
+        public bool Capture(string text) => regex.IsMatch(text);
     }
 }
